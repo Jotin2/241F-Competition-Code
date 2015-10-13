@@ -30,6 +30,8 @@
  int centerButton = 2;
  int rightButton = 4;
  int isMain = 1;
+ int isBattery = 0;
+ int isTest = 0;
  string mainbattery;
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -548,24 +550,12 @@ void getAccel()
 	  }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /// LCD SCREEN FUNCTIONS
+/*
+		0: Main Screen
+		1: Battery Voltage
+		2: Test Screen
+*/
 void clearline()
 {
 	clearLCDLine(0);
@@ -579,28 +569,54 @@ void battery()
 		  displayNextLCDString(mainBattery);
 		  if(nLCDButtons == centerButton)
 		  {
+		  	isBattery = 0;
 		  	isMain = 1;
+		  	clearLine();
 		  }
-		  if(isMain == 1)
-		  	{
-			  	clearline();
-			  	mainLCD();
-		    }
+}
+
+void testLCD()
+{
+	 displayLCDString(0, 0, "Ben sucks ");
+	 if(nLCDButtons == centerButton)
+			  {
+			  	isTest == 0;
+			  	isMain = 1;
+			  	clearLine();
+			  }
 }
 
 void mainLCD()
 {
 	if(nLCDButtons == leftButton)
 		{
+			isBattery = 1;
+			isMain = 0;
+			clearline();
+		}
+	if(nLCDButtons == rightButton)
+		{
+			isTest = 1;
 			isMain = 0;
 			clearline();
 		}
 	if(isMain == 1)
-	{
-		displayLCDString(0, 0, "241F");
-	}
-	if(isMain == 0)
+		{
+			displayLCDString(0, 0, "Team 241Nautilus");
+			displayLCDString(1, 0, "Version 1.1");
+		}
+	if(isMain == 0 && isBattery == 1)
 			{
-				battery();
+				while(isMain == 0 && isBattery == 1)
+				{
+					battery();
+				}
 		  }
+	if(isMain == 0 && isTest == 1)
+		{
+			while(isMain == 0 && isTest == 1)
+			{
+				testLCD();
+			}
+		}
 }
