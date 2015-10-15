@@ -46,13 +46,14 @@
 //			fullStop()-----------------int x=118,int direction=0, bool fancy=false
 //			forwardSeconds()-----------float s, float x=118
 //			backwardSeconds()----------float s, float x=118
-//			fancyTurnRightDegrees()----int degrees, bool forward=true, int x=80
-//			fancyTurnLeftDegrees()-----int degrees, bool forward=true, int x=80
 //			turnRightDegrees()---------float degree, float x=90
 //			turnLeftDegrees()----------float degree, float x=90
 //			turnRightSeconds()---------float seconds, float x=118
 //			turnLeftSeconds()----------float seconds, float x=118
-//
+//			clearLine()----------------None
+//      battery()------------------None
+//      testLCD()------------------None
+//      mainLCD()------------------None
 //
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -250,161 +251,6 @@ void backwardSeconds(float s, float x=118)
 }
 
 /**
-*
-* Locks left side motors with PI loop
-*
-* @warning function does not work
-* @author Sean Kelley  sgtkode01@gmail.com
-*
-*/
-task lockLeftSide()
-{
-	float target = 0;
-	float pGain = .3;
-	float iGain = .02;
-	//float error = target-SensorValue[encoderLeft];
-	float errorSum=0;
-	while(true){
-/*		error=target-SensorValue[encoderLeft];
-		errorSum+=error;
-		motor[FL] = error*pGain+errorSum*iGain;
-		  motor[BL] = error*pGain+errorSum*iGain;*/
-	}
-}
-
-/**
-*
-* Locks right side motors with PI loop
-*
-* @warning function does not work
-* @author Sean Kelley  sgtkode01@gmail.com
-*
-*/
-task lockRightSide()
-{
-	float target = 0;
-	float pGain = .3;
-	float iGain = .02;
-//	float error = target-SensorValue[encoderRight];
-	float errorSum=0;
-	while(true){
-/*		error=target-SensorValue[encoderRight];
-		errorSum+=error;
-		motor[FR] = error*pGain+errorSum*iGain;
-	  motor[BR] = error*pGain+errorSum*iGain;*/
-	}
-}
-
-/*
-* Turns bot right only using left side motors
-*
-* @warning requires gyro
-* @author Bernard Suwirjo  bsuwirjo@gmail.com
-* @author Sean Kelley  sgtkode01@gmail.com
-*
-* @params   degrees   amount of degrees to turn right
-* @params   forward   boolean if bot is turning forward or backward
-* @params   x         speed of motors
-*
-*/
-void fancyTurnRightDegrees(int degrees, bool forward=true, int x=80)
-{
-	// reset encoders
-	degrees=degrees*10;
-	// reset gyro
-	//gyro takes degrees from 0-3600, so we multiply by 10 to get a gyro processable number
-	SensorValue[gyro]=0;
-	// turn forwards or backwards based on forward boolean
-	if(forward)
-	{
-		while(abs(SensorValue[gyro]) < degrees) //While the gyro value is less than the target perform code below
-		{
-			//Set only the left side motors to the target value
-			motor[FL] = x;
-		  motor[BL] = x;
-		}
-		//breifly set the motor values opposite to ensure an actual stop
-		motor[FL] = -10;
-		motor[BL] = -10;
-		wait1Msec(150);
-		motor[FL] = 0;
-		motor[BL] = 0;
-	}
-	else
-	{
-		while(abs(SensorValue[gyro]) < degrees)
-		{
-			//Set only the left side motors to the negative target value
-			motor[FL] = -x;
-		  motor[BL] = -x;
-		}
-		//Ensure actual stop
-		motor[FL] = 10;
-	  motor[BL] = 10;
-	  wait1Msec(150);
-	  motor[FL] = 0;
-	  motor[BL] = 0;
-	}
-
-}
-
-/*
-* Turns bot left only using left side motors
-*
-* @warning requires gyro
-* @author Bernard Suwirjo  bsuwirjo@gmail.com
-* @author Sean Kelley  sgtkode01@gmail.com
-*
-* @params   degrees   amount of degrees to turn left
-* @params   forward   boolean if bot is turning forward or backward
-* @params   x         speed of motors
-*
-*/
-void fancyTurnLeftDegrees(int degrees, bool forward=true, int x=80)
-{
-	// reset encoders
-	degrees=degrees*10;
-	// reset gyro
-	//gyro takes degrees from 0-3600, so we multiply by 10 to get a gyro processable number
-	SensorValue[gyro] = 0;
-	if(forward)
-	{
-		while(abs(SensorValue[gyro]) < degrees)
-		{
-			//Set only the right side motors to the target value
-			motor[FR] = x;
-		  motor[BR] = x;
-		}
-		//Ensure actual stop
-		motor[FR] = -10;
-		motor[BR] = -10;
-		wait1Msec(150);
-		motor[FR] = 0;
-		motor[BR] = 0;
-	}
-	else
-	{
-		while(abs(SensorValue[gyro]) < degrees)
-		{
-			//Set only the right side motors to the negative target value
-			motor[FR] = -x;
-		  motor[BR] = -x;
-		}
-		//Ensure actual stop
-		motor[FR] = 10;
-		motor[BR] = 10;
-		wait1Msec(150);
-		motor[FR] = 0;
-		motor[BR] = 0;
-	}
-}
-
-
-
-
-
-
-/**
 * Turns bot right a given amount of degrees
 *
 * @warning requires gyro
@@ -462,6 +308,7 @@ void turnRightDegrees(float degree, float x=90)
 *	@params	 x       speed of motors
 *
 */
+
 void turnLeftDegrees(float degree, float x=90)
 {
 	//Reset gyro
@@ -498,7 +345,6 @@ void turnLeftDegrees(float degree, float x=90)
 	}
 	clearMotor();
 }
-
 
 /**
 * Turns bot right a given amount of seconds
@@ -550,11 +396,15 @@ void getAccel()
 	  }
 }
 
-/// LCD SCREEN FUNCTIONS
-/*
-		0: Main Screen
-		1: Battery Voltage
-		2: Test Screen
+/////////////////////////////////////////////////////////////////////////////////////////
+//
+//                                 LCD FUNCTIONS
+//
+/////////////////////////////////////////////////////////////////////////////////////////
+/**
+* Clears the lines of the LCD
+*
+* @author Joshua Asari  josh.asari@gmail.com
 */
 void clearline()
 {
@@ -562,6 +412,11 @@ void clearline()
 	clearLCDLine(1);
 }
 
+/**
+* Shows the battery voltage
+*
+* @author Joshua Asari  josh.asari@gmail.com
+*/
 void battery()
 {
 		  displayLCDString(0, 0, "Primary: ");
@@ -575,6 +430,11 @@ void battery()
 		  }
 }
 
+/**
+* Test screen for LCD
+*
+* @author Joshua Asari  josh.asari@gmail.com
+*/
 void testLCD()
 {
 	 displayLCDString(0, 0, "Ben sucks ");
@@ -586,6 +446,11 @@ void testLCD()
 			  }
 }
 
+/**
+* Home screen for LCD
+*
+* @author Joshua Asari  josh.asari@gmail.com
+*/
 void mainLCD()
 {
 	if(nLCDButtons == leftButton)
