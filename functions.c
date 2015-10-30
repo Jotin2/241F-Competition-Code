@@ -27,7 +27,6 @@
  */
 
 // GLOBAL VARIABLES
- int array[20];
  int leftButton = 1;
  int centerButton = 2;
  int rightButton = 4;

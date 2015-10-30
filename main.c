@@ -60,11 +60,28 @@ void pre_auton()
  * Period of match when bot is using only code to operate.
  */
 task autonomous(){
-	runLauncher(4, 118);
-	forwardSeconds(1.5, 118);
-	runIntake(2);
-	backwardSeconds(1.5, 118);
-	runLauncher(4, 118);
+	motor[launcher] = -118;
+	wait10Msec(164);
+	motor[launcher] = 0;
+	motor[intake] = -118;
+	wait10Msec(150);
+	motor[launcher] = -118;
+	motor[intake] = 0;
+	wait10Msec(164);
+	motor[launcher] = 0;
+	motor[intake] = -118;
+	wait10Msec(155);
+	motor[launcher] = -118;
+	motor[intake] = 0;
+	wait10Msec(164);
+	motor[launcher] = 0;
+	motor[intake] = -118;
+	wait10Msec(155);
+	motor[launcher] = -118;
+	motor[intake] = 0;
+	wait10Msec(164);
+	motor[intake] = 0;
+	motor[launcher] = 0;
 }
 
 
@@ -72,22 +89,17 @@ task autonomous(){
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 //                                 User Control Task
-0.
+/////////////////////////////////////////////////////////////////////////////////////////
 /**
  * Period of match when driver controls the bot
  */
 task usercontrol(){
-
-
-while(true)
-{
-
-
-		//	clearline();
-	//		mainLCD();
-			drive();
-			intakeCont();
-			launcherCont();
-
-}
+	while(true)
+	{
+		  	clearline();
+		  	mainLCD();
+				drive();
+				intakeCont();
+				launcherCont();
+	}
 }
