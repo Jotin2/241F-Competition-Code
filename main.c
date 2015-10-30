@@ -72,16 +72,22 @@ task autonomous(){
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 //                                 User Control Task
-//
-/////////////////////////////////////////////////////////////////////////////////////////
-
+0.
 /**
  * Period of match when driver controls the bot
  */
 task usercontrol(){
-			clearline();
-			mainLCD();
+
+
+while(true)
+{
+
+
+		//	clearline();
+	//		mainLCD();
 			drive();
 			intakeCont();
 			launcherCont();
+
+}
 }

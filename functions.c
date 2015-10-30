@@ -446,11 +446,11 @@ void runLauncher(int rotations, int speed)
 
 void launcherCont()
 {
-	if(Btn8D == 1)
+	if(vexRT[Btn6D] == 1)
 	{
 		motor[launcher] = 118;
 	}
-	if(Btn7D == 1)
+	else if(vexRT[Btn5D] == 1)
 	{
 		motor[launcher] = -118;
 	}
@@ -481,13 +481,13 @@ void runIntake(float seconds)
 
 void intakeCont()
 {
-	if(Btn5D == 1)
-	{
-		motor[intake] = 118;
-	}
-	if(Btn6D == 1)
+	if(vexRT[Btn6U] == 1)
 	{
 		motor[intake] = -118;
+	}
+	else if(vexRT[Btn5U] == 1)
+	{
+		motor[intake] = 118;
 	}
 	else
 	{
