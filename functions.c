@@ -1,8 +1,8 @@
 #pragma config(Sensor, in1,    gyro,           sensorGyro)
 #pragma config(Sensor, in2,    accel,          sensorAccelerometer)
 #pragma config(Sensor, dgtl1,  tLaunch,        sensorTouch)
-#pragma config(Sensor, dgtl2,  tBall,          sensorTouch)
-#pragma config(Sensor, dgtl3,  pn1,            sensorDigitalOut)
+#pragma config(Sensor, dgtl2,  pn1,            sensorDigitalOut)
+#pragma config(Sensor, dgtl3,  tBall,          sensorTouch)
 #pragma config(Motor,  port2,           RF,            tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port3,           RB,            tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port4,           LF,            tmotorVex393_MC29, openLoop)
@@ -86,7 +86,7 @@ void drive(bool half=false)
 				motor[LF] = -vexRT[Ch3]; //give drive direct control.
 				motor[LB] = -vexRT[Ch3];
 				motor[RF] = vexRT[Ch2];
-				motor[RB] = vexRT[Ch2];
+				motor[RB] = -vexRT[Ch2];
 			}
 			else if(half ==true)
 			{
@@ -445,10 +445,10 @@ void runLauncher(int rotations, int speed)
 	motor[intake2] = 0;
 }
 
-void runLauncherSec(int seconds, int speed)
+void runLauncherSec(float seconds)
 {
-	motor[launcher1] = speed;
-	motor[launcher2] = speed;
+	motor[launcher1] = -118;
+	motor[launcher2] = -118;
 	wait10Msec(seconds * 100);
 	motor[launcher1] = 0;
 	motor[launcher2] = 0;
@@ -487,11 +487,16 @@ void launcherCont()
 */
 void runIntake(float seconds)
 {
-	motor[intake1] = 118;
-	motor[intake2] = 118;
-	wait10Msec(seconds*10);
+	motor[intake1] = -118;
+	wait10Msec(seconds * 100);
 	motor[intake1] = 0;
-	motor[intake2] = 0;
+}
+
+void runIntake2(float seconds)
+{
+	motor[intake2] = 118;
+	wait10Msec(seconds * 100);
+	motor[intake2]= 0;
 }
 
 void intakeCont()
@@ -499,17 +504,42 @@ void intakeCont()
 	if(vexRT[Btn6U] == 1)
 	{
 		motor[intake1] = -118;
-		motor[intake2] = -118;
 	}
 	else if(vexRT[Btn5U] == 1)
 	{
 		motor[intake1] = 118;
-		motor[intake2] = 118;
 	}
 	else
 	{
 		motor[intake1] = 0;
+	}
+}
+
+void intakeCont2()
+{
+	if(vexRT[Btn8D] == 1)
+	{
+		motor[intake2] = 118;
+	}
+	else if(vexRT[Btn7D] == 1)
+	{
+		motor[intake2] = -118;
+	}
+	else
+	{
 		motor[intake2] = 0;
+	}
+}
+
+void pnCont()
+{
+	if(vexRT[Btn8D] == 1)
+	{
+		SensorValue[pn1] = 1;
+	}
+	else if(vexRT[Btn8U] == 1)
+	{
+		SensorValue[pn1] = 0;
 	}
 }
 
