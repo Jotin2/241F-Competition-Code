@@ -1,9 +1,13 @@
 #pragma config(Sensor, in1,    gyro,           sensorGyro)
 #pragma config(Sensor, dgtl1,  tLaunch,        sensorTouch)
-#pragma config(Sensor, dgtl2,  pn1,            sensorTouch)
-#pragma config(Sensor, dgtl3,  tBall,          sensorNone)
-#pragma config(Motor,  port2,           intake1,       tmotorVex393_MC29, openLoop)
-#pragma config(Motor,  port3,           intake2,       tmotorVex393_MC29, openLoop)
+#pragma config(Sensor, dgtl2,  pn1,            sensorDigitalOut)
+#pragma config(Sensor, dgtl3,  tIntake2,       sensorTouch)
+#pragma config(Sensor, dgtl4,  tIntake3,       sensorTouch)
+#pragma config(Sensor, dgtl5,  tIntake1,       sensorTouch)
+#pragma config(Sensor, dgtl8,  tball,          sensorTouch)
+#pragma config(Sensor, dgtl10, pn2,            sensorDigitalOut)
+#pragma config(Motor,  port2,           intake2,       tmotorVex393_MC29, openLoop)
+#pragma config(Motor,  port3,           intake1,       tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port4,           LF,            tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port5,           LB,            tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port6,           RF,            tmotorVex393_MC29, openLoop)
@@ -85,13 +89,30 @@ task autonomous(){
 task usercontrol(){
 	clearline();
 	SensorValue[pn1] = 1;
+//	SensorValue[pn2] = 1;
+	int autoIn = 0;
+//	startTask(detection);
 	while(true)
-  {
+	{
 		  	mainLCD();
 				drive();
 				intakeCont();
 				intakeCont2();
 				launcherCont();
 				pnCont();
+			/*	if(vexRT[Btn8R] == 1)
+				{
+					autoIn ++;
+					if (autoIn == 1)
+					{
+						autoIn = 0;
+					}
+				}
+				if(autoIn)
+				{
+					autoIntake();
+				}*/
+				//autoIntake();
+
 	}
 }
