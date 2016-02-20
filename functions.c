@@ -4,9 +4,9 @@
 #pragma config(Sensor, dgtl2,  pn1,            sensorDigitalOut)
 #pragma config(Sensor, dgtl3,  tIntake2,       sensorTouch)
 #pragma config(Sensor, dgtl4,  tIntake3,       sensorTouch)
+#pragma config(Sensor, dgtl5,  tIntake1,       sensorTouch)
 #pragma config(Sensor, dgtl8,  tball,          sensorTouch)
 #pragma config(Sensor, dgtl9,  pn2,            sensorDigitalOut)
-#pragma config(Sensor, dgtl10, tIntake1,       sensorNone)
 #pragma config(Motor,  port2,           intake2,       tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port3,           intake1,       tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port4,           LF,            tmotorVex393_MC29, openLoop)
@@ -43,7 +43,6 @@ int rightButton = 4;
 int isMain = 1;
 int isBattery = 0;
 int isAutonomous = 0;
-int eliX = 0;
 string mainbattery;
 void back(int a, int b,int c);
 
@@ -107,8 +106,10 @@ void drive(bool half=false)
 	}
 }
 
-void detection()
+task detection()
 {
+	while(true)
+	{
 		if(SensorValue[tIntake1] == 1)
 		{
 			bInIntake2++;
@@ -121,10 +122,32 @@ void detection()
 		{
 			bInLauncher = false;
 		}
+		wait1Msec(.1);
+	}
 }
 
 void autoIntake()
 {
+/*	if(bInIntake2 < 2)
+	{
+		motor[intake1] = -118;
+	}
+	else if(bInIntake2 >= 2)
+	{
+		if(SensorValue[tIntake1] == 0)
+		{
+			motor[intake1] = -118;
+		}
+		motor[intake1] = 0;
+	}*/
+/*	if(SensorValue[tIntake3] == 1)
+	{
+		bInLauncher = true;
+	}
+	else if(SensorValue[tIntake3] == 0)
+	{
+		bInLauncher = false;
+	}*/
 	if(bInLauncher == false)
 	{
 		motor[intake1] = -118; // temp
@@ -133,7 +156,7 @@ void autoIntake()
 		{
 			motor[intake2] = 0;
 		}
-	//	bInIntake2--;
+		bInIntake2--;
 	}
 	else if(bInLauncher == true)
 	{
@@ -141,32 +164,11 @@ void autoIntake()
 		{
 			motor[intake1] = -118; // temp
 			motor[intake2] = 118;
-			eliX = 0;
 		}
-		else if(SensorValue[tIntake2] == 1)
+		if(SensorValue[tIntake2] == 1)
 		{
-		//	motor[intake1] = 0; // temp
-
-			if(SensorValue[tIntake1] == 0)
-			{
+			motor[intake1] = 0; // temp
 			motor[intake2] = 0;
-			motor[intake1] = -118;
-			}
-			else if(SensorValue[tIntake1] == 1)
-			{
-				if(eliX == 0)
-				{
-				motor[intake2] = 0;
-				motor[intake1] = 0;
-				}
-				else if(eliX == 1)
-				{
-					motor[intake2] = -118;
-					wait10msec(75);
-					eliX = 0;
-				}
-				eliX = 1;
-			}
 		}
 	}
 }
@@ -345,13 +347,13 @@ void backwardSeconds(float s, float x=118)
 *
 */
 void turnRightDegrees(float degree, float x=90)
-{
+{/*
 	//Reset gyro
 	SensorValue[gyro]=0;
 	//gyro takes degrees from 0-3600, so we multiply by 10 to get a gyro processable number
 	degree=degree*10;
 	//We want to slow down when we approach the target, so we calculate a first turn segment as 60% of the total
-	float first=degree*.45;
+	float first=degree*.6;
 	while(abs(SensorValue[gyro]) < first) //Turn the first 60%
 	{
 	//Since it's turn right, we want to set right motors backwards and left motors forward.
@@ -378,7 +380,7 @@ void turnRightDegrees(float degree, float x=90)
 	motor[BR] = -x*.35;
 	}
 	}
-	clearMotor();
+	clearMotor();*/
 }
 
 /**
@@ -606,7 +608,7 @@ void intakeCont2()
 
 void pnCont()
 {
-	if(vexRT[Btn8L] == 1)
+	if(vexRT[Btn8D] == 1)
 	{
 		SensorValue[pn1] = 1;
 	}
